@@ -1,0 +1,13 @@
+{% extends "list.html" %}
+{% block title %}RadioPi internet radio stations{% endblock %}
+{% block description %}On this page you can add, change, or delete station lists.{% endblock %}
+{% block listheader %}Station lists:{% endblock %}
+{% block listitems %}
+{% for playlist in playlists %}
+{% if playlist == selected %}
+  	<a class="list-group-item active" href="{{ url_for('station_list_selected', playlist=playlist) }}">{{ playlist }}</a>
+{% else %}
+	<a class="list-group-item" href="{{ url_for('station_list_selected', playlist=playlist) }}">{{ playlist }}</a>
+{% endif %}
+{% endfor %}
+{% endblock %}

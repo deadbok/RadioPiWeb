@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}RadioPi add...{% endblock %}
+{% block content %}
+<form role="form" method="POST" action="{{ url_for('add_station_list') }}">
+	<div class="form-group">
+    	<label for="name">Name:</label>
+    	<input type="text" class="form-control" name="name" placeholder="Enter name">
+	</div>
+    <button type="submit" value="Add" class="btn btn-default">
+    	<span class="glyphicon glyphicon-plus"></span>
+  		<span class="hidden-xs">Add</span>
+  	</button>
+</form>
+{% endblock %}
