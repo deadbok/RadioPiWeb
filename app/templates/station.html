@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with RadioPiWeb.  If not, see <http://www.gnu.org/licenses/>.
 -->
 {% extends "base.html" %}
-{% block title %}RadioPi add station{% endblock %}
+{% block title %}RadioPi station{% endblock %}
 {% block content %}
+<p>Here you can input the title and location of an internet radio station.</p>
 <form role="form" method="POST" action="{{ action }}">
 {% if title_value %}
 	<div class="form-group">

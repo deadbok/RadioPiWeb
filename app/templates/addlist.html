@@ -19,6 +19,7 @@ along with RadioPiWeb.  If not, see <http://www.gnu.org/licenses/>.
 {% extends "base.html" %}
 {% block title %}RadioPi add play list{% endblock %}
 {% block content %}
+<p>Here you can input the name of a new list of internet radio stations.</p>
 <form role="form" method="POST" action="{{ url_for('add_station_list') }}">
 	<div class="form-group">
     	<label for="name">Name:</label>
