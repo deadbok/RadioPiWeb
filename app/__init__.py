@@ -1,6 +1,6 @@
 from flask import Flask
 
-VERSION = '0.1'
+VERSION = '0.2'
 
 app = Flask(__name__)
 app.config.from_object('config')

@@ -94,22 +94,49 @@ def add_station(playlist):
         return redirect(url_for('edit_station_list', playlist=playlist))
     # Return the form if this is a GET request
     return render_template('station.html',
-                           playlist=playlist)
+                           playlist=playlist,
+                           action=url_for('add_station', playlist=playlist))
 
 
-@app.route('/edit_station/<playlist>/<station>')
+@app.route('/edit_station/<playlist>/<station>', methods=['GET', 'POST'])
 def edit_station(playlist, station):
     filename = os.path.join(PLAYLIST_DIR, playlist + '.m3u')
     m3u = PyM3U(filename)
+    index = m3u.get_index_by_title(station)
+    if index == None:
+        flash('Something went wrong, try again.', 'error')
+        return redirect(url_for('edit_station_list', playlist=playlist))
+    if request.method == 'POST':
+        # Get the name from the form and process it to strip unwanted
+        # naughtiness
+        title = request.form['title']
+        location = request.form['url']
+        if title == '':
+            flash('You must input a title', 'error')
+        elif location == '':
+            flash('You must input a URL', 'error')
+        else:
+            m3u.playlist[index][title] = title
+            m3u.playlist[index][location] = location
+            m3u.write()
+            flash('Changed "' + title + '"', 'info')
+        return redirect(url_for('edit_station_list', playlist=playlist))
+    # Return the form if this is a GET request
     return render_template('station.html',
-                           playlist=playlist)
+                           playlist=playlist,
+                           action=url_for('edit_station',
+                                          playlist=playlist,
+                                          station=station),
+                           title_value=m3u.playlist[index]['title'],
+                           location_value=m3u.playlist[index]['location'])
 
 
 @app.route('/del_station/<playlist>/<station>')
 def del_station(playlist, station):
     filename = os.path.join(PLAYLIST_DIR, playlist + '.m3u')
     m3u = PyM3U(filename)
-    return render_template('playlist.html',
-                           playlist=playlist,
-                           m3u=m3u.playlist,
-                           selected=station)
+    index = m3u.get_index_by_title(station)
+    del m3u.playlist[index]
+    m3u.write()
+    flash('Deleted "' + station + '"', 'info')
+    return redirect(url_for('edit_station_list', playlist=playlist))

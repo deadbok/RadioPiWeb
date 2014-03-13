@@ -109,3 +109,14 @@ class PyM3U(object):
         entry['location'] = location
         self.playlist.append(entry)
 
+    def get_index_by_title(self, title):
+        '''
+        Get the index for an entry from title.
+        '''
+        i = 0
+        for entry in self.playlist:
+            if title == entry['title']:
+                return(i)
+            i += 1
+        return(None)
+
