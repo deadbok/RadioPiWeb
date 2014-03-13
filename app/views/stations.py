@@ -7,7 +7,7 @@ from config import PLAYLIST_DIR
 from flask import render_template, request, redirect, url_for, flash
 from os.path import basename
 from app import app
-from app.playlists import get_playlists, add_playlist, remove_playlist
+from app.util.playlists import get_playlists, add_playlist, remove_playlist
 
 
 @app.route('/stations')
