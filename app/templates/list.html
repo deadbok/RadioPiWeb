@@ -9,30 +9,9 @@
 		<div class="list-group">
 		{% block listitems %}{% endblock %}
 		</div>
+		
 		<p>
-  			<a href="{{ url_for('add_station_list') }}" role="button" class="btn btn-default">
-  				<span class="glyphicon glyphicon-plus"></span>
-  				<span class="hidden-xs">Add</span>
-  			</a>
-  			{% if path %}
-  			<a href="{{ url_for('edit_station_list', playlist=path) }}" role="button" class="btn btn-default">
-  				<span class="glyphicon glyphicon-pencil"></span>
-  				<span class="hidden-xs">Edit</span>
-  			</a>
-  			<a href="{{ url_for('del_station_list', playlist=path) }}" role="button" class="btn btn-default">
-  				<span class="glyphicon glyphicon-minus"></span>
-  				<span class="hidden-xs">Delete</span>
-  			</a>  			
-  			{% else %}
-  			<button type="button" class="btn btn-default disabled">
-  				<span class="glyphicon glyphicon-pencil"></span>
-  				<span class="hidden-xs">Edit</span>
-  			</button>
-  			<button type="button" class="btn btn-default disabled">
-  				<span class="glyphicon glyphicon-minus"></span>
-  				<span class="hidden-xs">Delete</span>
-  			</button>
-  			{% endif %}
+			{% block buttons %}{% endblock %}
 		</p>
 	</div>
 </div>

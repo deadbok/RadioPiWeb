@@ -1,27 +1,27 @@
 {% extends "list.html" %}
 {% block title %}RadioPi internet radio stations{% endblock %}
-{% block description %}On this page you can add, change, or delete station lists.{% endblock %}
+{% block description %}On this page you can add, change, or delete stations.{% endblock %}
 {% block listheader %}Station lists:{% endblock %}
 {% block listitems %}
-{% for playlist in playlists %}
-{% if playlist == selected %}
-  	<a class="list-group-item active" href="{{ url_for('station_list_selected', playlist=playlist) }}">{{ playlist }}</a>
+{% for item in m3u %}
+{% if item['title'] == selected %}
+  	<a class="list-group-item active" href="{{ url_for('edit_station_list_selected', playlist=playlist, station=item['title']) }}">{{ item['title'] }}</a>
 {% else %}
-	<a class="list-group-item" href="{{ url_for('station_list_selected', playlist=playlist) }}">{{ playlist }}</a>
+	<a class="list-group-item" href="{{ url_for('edit_station_list_selected', playlist=playlist, station=item['title']) }}">{{ item['title'] }}</a>
 {% endif %}
 {% endfor %}
 {% endblock %}
 {% block buttons %}
-<a href="{{ url_for('add_station_list') }}" role="button" class="btn btn-default">
+<a href="{{ url_for('add_station', playlist=playlist) }}" role="button" class="btn btn-default">
 	<span class="glyphicon glyphicon-plus"></span>
 	<span class="hidden-xs">Add</span>
 </a>
 {% if not selected == '' %}
-<a href="{{ url_for('edit_station_list', playlist=selected) }}" role="button" class="btn btn-default">
+<a href="{{ url_for('edit_station', playlist=playlist, station=selected) }}" role="button" class="btn btn-default">
 	<span class="glyphicon glyphicon-pencil"></span>
 	<span class="hidden-xs">Edit</span>
 </a>
-<a href="{{ url_for('del_station_list', playlist=selected) }}" role="button" class="btn btn-default">
+<a href="{{ url_for('del_station', playlist=playlist, station=selected) }}" role="button" class="btn btn-default">
 	<span class="glyphicon glyphicon-minus"></span>
 	<span class="hidden-xs">Delete</span>
 </a>  			

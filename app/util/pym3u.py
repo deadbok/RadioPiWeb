@@ -15,7 +15,7 @@ def check_extended_header(filename):
         flash(exception.strerror, 'error')
         return(False)
 
-    if header.strip('\n') == pym3u.header_tag:
+    if header.strip('\n') == PyM3U.header_tag:
         return(True)
     else:
         return(False)
@@ -27,43 +27,31 @@ def create_empty(filename):
     '''
     try:
         with open(filename, 'w') as m3u_file:
-            m3u_file.write(pym3u.header_tag + '\n')
+            m3u_file.write(PyM3U.header_tag + '\n')
     except EnvironmentError as exception:
         flash(exception.strerror, 'error')
 
     return(True)
 
 
-class pym3u(object):
+class PyM3U(object):
     '''
     Class to handle M3U play lists
     '''
-    m3u_file = None
-    '''M3U file.'''
+    filename = ''
+    '''The filename.'''
     header_tag = '#EXTM3U'
     '''Header tag that identifies an extended M3U file.'''
     info_tag = '#EXTINF:'
     '''Tag to include extended information about a track.'''
-    m3u_data = None
-    '''List of the lines in the M3U file.'''
     playlist = list()
     '''List of dictionaries for each M3U entry.'''
     def __init__(self, filename):
         '''
         Constructor.
         '''
-        self.m3u_file = open(filename)
-        self.m3u_data = self.m3u_file.readlines()
-        if self.check_header():
-            self.read()
-
-    def check_header(self):
-        '''
-        Check for the correct header.
-        '''
-        if self.m3u_data[0] == self.header_tag:
-            return(True)
-        return(False)
+        self.filename = filename
+        self.read()
 
     def read(self):
         '''
@@ -73,16 +61,51 @@ class pym3u(object):
         'title' is a human readable text (track name).
         'location' is the path to the media.
         '''
-        # Start at first line after the header
-        line = 1
-        while (line < len(self.m3u_data)):
-            entry = dict()
-            # remove the extended tag
-            info = self.m3u_data[line].replace(self.info_tag, '')
-            # Split the rest into time and track info
-            entry['runtime'], _, entry['title'] = info.partition(',')
-            # next line
-            line += 1
-            entry['location'] = self.m3u_data[line]
-            # Append to the list
-            self.playlist.append(entry)
+        # Check for header
+        if check_extended_header(self.filename):
+            with open(self.filename, 'r') as m3u_file:
+                self.playlist.clear()
+                # Skip the header
+                _ = m3u_file.readline()
+                # Start at first line after the header
+                for line in m3u_file:
+                    line = line.strip('\n')
+                    if not line == '':
+                        if line.startswith(self.info_tag):
+                            entry = dict()
+                            # remove the extended tag
+                            info = line.replace(self.info_tag, '').strip('\n')
+                            # Split the rest into time and track info
+                            entry['runtime'], _, entry['title'] = info.partition(',')
+                        else:
+                            # Read the location
+                            entry['location'] = line
+                            # Append to the list
+                            self.playlist.append(entry)
+
+    def write(self):
+        '''
+        Save the M3U file.
+        '''
+        with open(self.filename, 'w') as m3u_file:
+            # Write header
+            m3u_file.write(self.header_tag + '\n')
+            # Run through all entries
+            for entry in self.playlist:
+                # Extended info
+                m3u_file.write(self.info_tag
+                               + str(entry['runtime'])
+                               + ',' + entry['title'] + '\n')
+                # Media location
+                m3u_file.write(entry['location'] + '\n')
+
+    def add(self, title, runtime, location):
+        '''
+        Add an entry to the playlist.
+        '''
+        entry = dict()
+        entry['title'] = title
+        entry['runtime'] = runtime
+        entry['location'] = location
+        self.playlist.append(entry)
+
