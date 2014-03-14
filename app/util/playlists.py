@@ -29,9 +29,13 @@ def get_playlists(directory):
     Get all M3U files in a directory.
     '''
     try:
+        # Get a list of all files in the directory
         files = listdir(directory)
+        # Create a list to hold the playlists
         playlists = list()
+        # Run through the list of files
         for file in files:
+            # Split filename in extension and the rest
             root, ext = os.path.splitext(file)
             # If it's an M3U file add it
             if ext.upper() == '.M3U':
@@ -48,6 +52,7 @@ def add_playlist(directory, name):
     '''
     Add an empty M3U file to a directory.
     '''
+    # Get the absolute path
     filename = os.path.join(directory, name + '.m3u')
     return(create_empty(filename))
 
@@ -56,8 +61,10 @@ def remove_playlist(directory, name):
     '''
     Remove an M3U file from a directory.
     '''
+    # Get the absolute path
     filename = os.path.join(directory, name + '.m3u')
     try:
+        # Delete the file
         os.remove(filename)
     except EnvironmentError as exception:
         flash(exception.strerror, 'error')
