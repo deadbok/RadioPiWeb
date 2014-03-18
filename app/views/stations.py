@@ -186,6 +186,10 @@ def del_station(playlist, station):
     m3u = PyM3U(filename)
     # Get the index of the item
     index = m3u.get_index_by_title(station)
+    # If it could not be found
+    if index == None:
+        flash('Something went wrong, try again.', 'error')
+        return redirect(url_for('edit_station_list', playlist=playlist))
     # Delete the item
     del m3u.playlist[index]
     # Save the file

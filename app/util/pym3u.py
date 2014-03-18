@@ -155,4 +155,3 @@ class PyM3U(object):
             i += 1
         # Return none if no item was found
         return(None)
-
